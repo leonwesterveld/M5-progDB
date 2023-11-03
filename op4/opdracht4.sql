@@ -1,0 +1,151 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema usertest
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema usertest
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `usertest` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+-- -----------------------------------------------------
+-- Schema db_first
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema db_first
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `db_first` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `usertest` ;
+
+-- -----------------------------------------------------
+-- Table `usertest`.`test`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `usertest`.`test` ;
+
+CREATE TABLE IF NOT EXISTS `usertest`.`test` (
+  `idtest` INT NOT NULL,
+  PRIMARY KEY (`idtest`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+USE `db_first` ;
+
+-- -----------------------------------------------------
+-- Table `db_first`.`orders`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`orders` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`orders` (
+  `idorders` INT NOT NULL,
+  PRIMARY KEY (`idorders`),
+  UNIQUE INDEX `idorders_UNIQUE` (`idorders` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `db_first`.`users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`users` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`users` (
+  `idaction` INT NOT NULL,
+  PRIMARY KEY (`idaction`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `db_first`.`orders_has_users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`orders_has_users` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`orders_has_users` (
+  `orders_idorders` INT NOT NULL,
+  `users_idaction` INT NOT NULL,
+  PRIMARY KEY (`orders_idorders`, `users_idaction`),
+  INDEX `fk_orders_has_users_users1_idx` (`users_idaction` ASC) VISIBLE,
+  INDEX `fk_orders_has_users_orders1_idx` (`orders_idorders` ASC) VISIBLE,
+  CONSTRAINT `fk_orders_has_users_orders1`
+    FOREIGN KEY (`orders_idorders`)
+    REFERENCES `db_first`.`orders` (`idorders`),
+  CONSTRAINT `fk_orders_has_users_users1`
+    FOREIGN KEY (`users_idaction`)
+    REFERENCES `db_first`.`users` (`idaction`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `db_first`.`products`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`products` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`products` (
+  `idproducts` INT NOT NULL,
+  PRIMARY KEY (`idproducts`),
+  UNIQUE INDEX `idproducts_UNIQUE` (`idproducts` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `db_first`.`products_has_orders`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`products_has_orders` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`products_has_orders` (
+  `products_idproducts` INT NOT NULL,
+  `orders_idorders` INT NOT NULL,
+  PRIMARY KEY (`products_idproducts`, `orders_idorders`),
+  INDEX `fk_products_has_orders_orders1_idx` (`orders_idorders` ASC) VISIBLE,
+  INDEX `fk_products_has_orders_products_idx` (`products_idproducts` ASC) VISIBLE,
+  CONSTRAINT `fk_products_has_orders_orders1`
+    FOREIGN KEY (`orders_idorders`)
+    REFERENCES `db_first`.`orders` (`idorders`),
+  CONSTRAINT `fk_products_has_orders_products`
+    FOREIGN KEY (`products_idproducts`)
+    REFERENCES `db_first`.`products` (`idproducts`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `db_first`.`products_has_users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_first`.`products_has_users` ;
+
+CREATE TABLE IF NOT EXISTS `db_first`.`products_has_users` (
+  `products_idproducts` INT NOT NULL,
+  `users_idaction` INT NOT NULL,
+  PRIMARY KEY (`products_idproducts`, `users_idaction`),
+  INDEX `fk_products_has_users_users1_idx` (`users_idaction` ASC) VISIBLE,
+  INDEX `fk_products_has_users_products1_idx` (`products_idproducts` ASC) VISIBLE,
+  CONSTRAINT `fk_products_has_users_products1`
+    FOREIGN KEY (`products_idproducts`)
+    REFERENCES `db_first`.`products` (`idproducts`),
+  CONSTRAINT `fk_products_has_users_users1`
+    FOREIGN KEY (`users_idaction`)
+    REFERENCES `db_first`.`users` (`idaction`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
